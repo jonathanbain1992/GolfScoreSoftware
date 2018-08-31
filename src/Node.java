@@ -6,9 +6,9 @@ public class Node {
     private int authScore;
     private int weight;
 
-    protected ArrayList<Node> adjacentNodes = new ArrayList<>();
+    private ArrayList<Node> adjacentNodes = new ArrayList<>();
 
-    protected double getHashCode(){
+    private double getHashCode(){
         return this.hashCode();
     }
 
@@ -60,7 +60,7 @@ public class Node {
     /**
      * Returns a Node specified if it exists in this Node's neighbourhood.
      * @param  n  node to be returned
-     * @return either a) the node itself, if it exists, b) an exception if the node was not in the node's neighbourhood 
+     * @return either a) the node itself, if it exists, b) an exception if the node was not in the node's neighbourhood
      * @see Node
      */
 
@@ -77,7 +77,7 @@ public class Node {
      * Returns the removed Node object if it exists in this Node's neighbourhood.
      * @param  n  node to be removed
      * @return either a) the removed node, if it exists, b) an exception if the node was not in the node's neighbourhood and c) another
-     * type of exception if any other error occurred.
+     * type of exception if any other error occurred, returning it's cause.
      * @see Node
      */
 
@@ -92,9 +92,9 @@ public class Node {
                 throw new Exception("Node: " + getHashCode() + "does not contain node: " + n.getHashCode() + "in it's adjacent neighbourhood.");
             }
         }
+
         catch (Exception e){
-            // only way to satisfy the type guard @TODO: look into ways around wrapping an exception in an exception here.
-            return e;
+            throw new Exception(e);
         }
     }
 
