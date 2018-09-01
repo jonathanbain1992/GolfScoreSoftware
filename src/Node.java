@@ -84,7 +84,7 @@ public class Node {
 
     private Object getNeighbour(Double hashCode) throws Exception {
         for(Tuple t : adjacentNodes) {
-            if (t.getFirst().equals(hashCode)) {
+            if (t.getFirst()==hashCode) {
                 return adjacentNodes.get(adjacentNodes.indexOf(t)).getLast();
             }
             else {
@@ -131,7 +131,7 @@ public class Node {
     public Object removeNeighbour(Double hashCode) throws Exception {
         try {
             for(Tuple t: adjacentNodes) {
-                if (t.getFirst().equals(hashCode)) {
+                if (t.getFirst()==hashCode) {
                     adjacentNodes.remove(getNeighbour(hashCode));
                     return hashCode;
                 }
@@ -149,9 +149,27 @@ public class Node {
         return null;
     }
 
+    public Object addNeighbour(Tuple t) throws Exception {
+        try {
+            if (!(this.adjacentNodes.contains(t))) {
+                adjacentNodes.add(t);
+                return t;
+            }
+            else {
+                throw new Exception("Node: " + getHashCode() + "already contains node: " + t.getFirst() + " in it's adjacent neighbourhood.");
+            }
+        }
+
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+
     public Node(){
         this.hubScore = 1;
         this.authScore = 1;
         this.weight = 1;
     }
 }
+
+//@TODO: see about using an int as a colour, and grouping them by this in the graph to represent type?
