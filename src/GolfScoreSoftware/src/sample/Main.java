@@ -25,7 +25,7 @@ public class Main
 
             //TODO: find out how golf works lol
             //TODO: create method wired to gui that creates players, matches, retreives players and match list
-      
+
 
     {
         Connection connection = null;
