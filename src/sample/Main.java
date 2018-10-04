@@ -25,20 +25,26 @@ public class Main extends Application
     private Stage primaryStage;
     private AnchorPane anchorLayout;
     private Controller controller;
-controller
+
 
     @Override
     public void start(Stage primaryStage) throws Exception
     {
         Parent root = FXMLLoader.load(getClass().getResource(UI));
        // Scene scene = new Scene(root, 300, 250);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setController(new Controller());
+
+
         this.primaryStage = primaryStage;
         Scene scene = new Scene(root, 500, 400);
         this.primaryStage.setScene(scene);
         this.primaryStage.setTitle("Birdie");
         scene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
 
-
+        primaryStage.setResizable(false);
 
 
 
