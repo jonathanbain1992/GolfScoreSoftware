@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javax.persistence:javax.persistence-api:2.21" level="project" />
     <orderEntry type="library" name="sqlite-jdbc-3.23.1" level="project" />
+    <orderEntry type="library" name="sqlite-jdbc-3.15.11" level="project" />
   </component>
 </module>
