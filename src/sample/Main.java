@@ -1,11 +1,11 @@
 package sample;
 
-import com.sun.tools.internal.ws.wsdl.framework.DuplicateEntityException;
 import com.sun.xml.internal.fastinfoset.util.DuplicateAttributeVerifier;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import javax.persistence.EntityManager;
@@ -18,16 +18,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Main
+public class Main extends Application
 {
 
-    public static void main(String[] args)
+    private static final String UI = "ui.fxml";
+    private Stage primaryStage;
+    private AnchorPane anchorLayout;
+    private Controller controller;
 
+
+    @Override
+    public void start(Stage primaryStage) throws Exception
+    {
+        Parent root = FXMLLoader.load(getClass().getResource(UI));
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Birdie");
+        this.primaryStage.setScene(new Scene(root, 500, 400));
+        this.primaryStage.show();
+    }
+
+
+    public static void main(String[] args)
             //TODO: find out how golf works lol
             //TODO: create method wired to gui that creates players, matches, retreives players and match list
-
-
     {
+
+        launch(args);
+
+
         Connection connection = null;
         try
         {
@@ -36,10 +54,11 @@ public class Main
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            statement.executeUpdate("drop table if exists person");
-            statement.executeUpdate("create table person (id integer, name string)");
-            statement.executeUpdate("insert into person values(1, 'leo')");
-            statement.executeUpdate("insert into person values(2, 'yui')");
+            statement.executeUpdate("create table person (id integer, name string);");
+            statement.executeUpdate("insert into person values(1, 'henry')");
+            //statement.executeUpdate("create table person (id integer, name string)");
+            //statement.executeUpdate("insert into person values(1, 'leo')");
+            //statement.executeUpdate("insert into person values(2, 'yui')");
             ResultSet rs = statement.executeQuery("select * from person");
             while(rs.next())
             {

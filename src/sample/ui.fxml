@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+  <tabs>
+    <Tab text="Add Player">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TextField fx:id="forenameField" layoutX="30.0" layoutY="37.0" prefHeight="26.0" prefWidth="170.0" promptText="Forename" AnchorPane.leftAnchor="25.0" />
+                  <TextField fx:id="surnameField" layoutX="226.0" layoutY="37.0" prefHeight="26.0" prefWidth="170.0" promptText="Surname" AnchorPane.leftAnchor="225.0" />
+                  <TextField fx:id="ageField" layoutX="421.0" layoutY="37.0" prefHeight="26.0" prefWidth="42.0" promptText="Age" />
+                  <TextField fx:id="handicapField" layoutX="490.0" layoutY="37.0" prefHeight="26.0" prefWidth="80.0" promptText="Handicap" AnchorPane.rightAnchor="25.0" />
+                  <TextField layoutX="25.0" layoutY="95.0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 1" AnchorPane.topAnchor="100.0" />
+                  <TextField layoutX="25.0" layoutY="135.0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 2" AnchorPane.topAnchor="150.0" />
+                  <TextField layoutX="25.0" layoutY="171.0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 3" AnchorPane.topAnchor="195.0" />
+                  <TextField layoutX="421.0" layoutY="100.0" prefHeight="26.0" prefWidth="80.0" promptText="Postcode" />
+                  <CheckBox layoutX="415.0" layoutY="199.0" mnemonicParsing="false" text="Is Active" />
+                  <Button fx:id="savePlayerButton" layoutX="275.0" layoutY="269.0" mnemonicParsing="false" text="Save" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Create Match">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <DatePicker fx:id="matchTimeField" layoutX="45.0" layoutY="158.0" promptText="Match time" AnchorPane.leftAnchor="60.0" />
+                  <ComboBox fx:id="playerTwoChoiceField" layoutX="393.0" layoutY="60.0" prefWidth="150.0" promptText="Choose player" AnchorPane.rightAnchor="60.0" />
+                  <ComboBox fx:id="playerOneChoiceField" layoutX="45.0" layoutY="60.0" prefWidth="150.0" promptText="Choose player" AnchorPane.leftAnchor="60.0" />
+                  <Button fx:id="confirmMatchButton" layoutX="437.0" layoutY="158.0" mnemonicParsing="false" text="Confirm" AnchorPane.rightAnchor="100.0" />
+                  <Label layoutX="293.0" layoutY="65.0" text="vs" AnchorPane.leftAnchor="292.0" AnchorPane.rightAnchor="292.0" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>

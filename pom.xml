@@ -38,6 +38,17 @@
             <artifactId>guava</artifactId>
             <version>21.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.jclouds.labs</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>2.1.1</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.tools.ws</groupId>
+            <artifactId>webservices-tools</artifactId>
+            <version>2.1-b16</version>
+        </dependency>
     </dependencies>
     <build>
     <plugins>
