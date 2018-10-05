@@ -20,7 +20,7 @@ public class Player {
     private String address2;
     private String address3;
     private String postCode;
-    private boolean isActive;
+    private int isActive;
 
     //private Match[] matchesPlayed;
 
@@ -60,11 +60,11 @@ public class Player {
         return new ArrayList<>(Arrays.asList(address1,address2,address3,postCode));
     }
 
-    public boolean getIsActive(){
+    public int getIsActive(){
         return this.isActive;
     }
 
-    public Player(String firstName,String lastName, String address1,String address2,String address3, String postCode, int age,int handicap,boolean isActive){
+    public Player(String firstName,String lastName, String address1,String address2,String address3, String postCode, int age,int handicap,int isActive){
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -75,4 +75,16 @@ public class Player {
         this.isActive = isActive;
         this.handicap = handicap;
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format(
+                // id, forename, surname, address, age, handicap, isActive
+                "(%d, '%s', '%s', '%s', %d, %d, %d)",
+                hashCode(), firstName, lastName, "\n".join(address1,address2,address3),
+                age, handicap, isActive
+        );
+    }
+
 }
