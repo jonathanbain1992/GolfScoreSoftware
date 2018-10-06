@@ -38,7 +38,7 @@ public class Main extends Application
 
 
         this.primaryStage = primaryStage;
-        Scene scene = new Scene(root, 500, 400);
+        Scene scene = new Scene(root, 600, 500);
         this.primaryStage.setScene(scene);
         this.primaryStage.setTitle("Birdie");
         scene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());

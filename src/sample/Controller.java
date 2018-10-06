@@ -63,7 +63,6 @@ public class Controller {
 
         try {
             db = new DatabaseService();
-            System.out.println("Done");
 
             a = FXCollections.observableArrayList(
                     db.getPlayerNames()
