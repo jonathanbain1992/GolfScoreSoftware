@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -9,6 +10,8 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <tabs>
@@ -16,16 +19,36 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <TextField fx:id="forenameField" layoutX="30.0" layoutY="37.0" prefHeight="26.0" prefWidth="170.0" promptText="Forename" AnchorPane.leftAnchor="25.0" />
-                  <TextField fx:id="surnameField" layoutX="226.0" layoutY="37.0" prefHeight="26.0" prefWidth="170.0" promptText="Surname" AnchorPane.leftAnchor="225.0" />
-                  <TextField fx:id="ageField" layoutX="421.0" layoutY="37.0" prefHeight="26.0" prefWidth="42.0" promptText="Age" />
-                  <TextField fx:id="handicapField" layoutX="490.0" layoutY="37.0" prefHeight="26.0" prefWidth="80.0" promptText="Handicap" AnchorPane.rightAnchor="25.0" />
-                  <TextField fx:id="addressField0" layoutX="25.0" layoutY="95.0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 1" AnchorPane.topAnchor="100.0" />
-                  <TextField fx:id="addressField1" layoutX="25.0" layoutY="135.0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 2" AnchorPane.topAnchor="150.0" />
-                  <TextField fx:id="addressField2" layoutX="25.0" layoutY="171.0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 3" AnchorPane.topAnchor="195.0" />
-                  <TextField fx:id="postcodeField" layoutX="421.0" layoutY="100.0" prefHeight="26.0" prefWidth="80.0" promptText="Postcode" />
-                  <CheckBox fx:id="activeField" layoutX="415.0" layoutY="199.0" mnemonicParsing="false" text="Is Active" />
-                  <Button fx:id="savePlayerButton" layoutX="275.0" layoutY="269.0" mnemonicParsing="false" onAction="#handleSavePlayerButton" text="Save" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="300.0" spacing="25.0">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="400.0" spacing="25.0">
+                                 <children>
+                                    <TextField fx:id="forenameField" prefHeight="26.0" prefWidth="170.0" promptText="Forename" />
+                                    <TextField fx:id="surnameField" prefHeight="26.0" prefWidth="170.0" promptText="Surname" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="addressField0" prefHeight="26.0" prefWidth="370.0" promptText="Address line 1" />
+                              <TextField fx:id="addressField1" prefHeight="26.0" prefWidth="370.0" promptText="Address line 2" />
+                              <TextField fx:id="addressField2" prefHeight="26.0" prefWidth="370.0" promptText="Address line 3" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                           <children>
+                              <TextField fx:id="ageField" prefHeight="26.0" prefWidth="48.0" promptText="Age">
+                                 <VBox.margin>
+                                    <Insets right="50.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="postcodeField" prefHeight="26.0" prefWidth="80.0" promptText="Postcode" />
+                              <CheckBox fx:id="activeField" mnemonicParsing="false" text="Is Active" />
+                           </children>
+                        </VBox>
+                        <TextField fx:id="handicapField" prefHeight="26.0" prefWidth="80.0" promptText="Handicap" />
+                     </children>
+                  </HBox>
+                  <Button fx:id="savePlayerButton" layoutX="275.0" layoutY="261.0" mnemonicParsing="false" onAction="#handleSavePlayerButton" prefHeight="26.0" prefWidth="50.0" text="Save" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="275.0" AnchorPane.rightAnchor="275.0" />
                </children></AnchorPane>
       </content>
     </Tab>
