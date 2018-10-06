@@ -51,10 +51,13 @@ public class DatabaseService {
 
     public void insertPlayer(Player p) throws SQLException
     {
-        statement.executeUpdate("insert into person values" + p);
-        //connection.commit();
+        statement.executeUpdate("insert into person values" + p);  // Auto-commit enabled
     }
 
+
+    public void addMatch(Match m) throws SQLException
+    {
+    }
 
 
     public ResultSet queryPlayers(String... attributes) throws SQLException
@@ -86,40 +89,6 @@ public class DatabaseService {
 
         return fullNames;
     }
-
-
-
-    /*
-     try {
-        statement.executeUpdate("create table person (id integer, name string);");
-        statement.executeUpdate("insert into person values(1, 'henry')");
-        //statement.executeUpdate("create table person (id integer, name string)");
-        //statement.executeUpdate("insert into person values(1, 'leo')");
-        //statement.executeUpdate("insert into person values(2, 'yui')");
-        ResultSet rs = statement.executeQuery("select * from person");
-        while(rs.next())
-        {
-            // read the result set
-            System.out.println("name = " + rs.getString("name"));
-            System.out.println("id = " + rs.getInt("id"));
-        }
-    } catch (SQLException ex) {
-        // if the error message is "out of memory",
-        // it probably means no database file is found
-        System.err.println(ex.getMessage());
-        System.exit(-1);
-    } finally {
-        try
-        {
-            if(connection != null)
-                connection.close();
-        }
-        catch(SQLException e)
-        {
-            // connection close failed.
-            System.err.println(e);
-        }
-    } */
 
 
     public int getPersonIdByName(String fullName) throws SQLException

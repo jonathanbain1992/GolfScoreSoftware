@@ -11,6 +11,8 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 // Event handlers and members go here
@@ -51,6 +53,8 @@ public class Controller {
     @FXML
     private CheckBox activeField;
 
+    @FXML
+    private ChoiceBox<LocalTime> matchTimeField;
 
     public void initialize() {
         DatabaseService db = null;
@@ -72,6 +76,9 @@ public class Controller {
             playerTwoWidget.setItems(a);
             playerTwoWidget.getSelectionModel().selectFirst();
 
+
+            // TODO populate 'add game' tab widgets with values, add to/create event handler for 'confirm match' button
+            // TODO add game scoring logic
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -145,7 +152,7 @@ public class Controller {
                 Integer id0 = db.getPersonIdByName(playerOneFullName);
                 Integer id1 = db.getPersonIdByName(playerTwoFullName);
                 LocalDate matchDate = matchDateField.getValue();
-                
+
             }
 
 
