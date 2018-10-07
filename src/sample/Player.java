@@ -80,9 +80,9 @@ public class Player {
     public String toString()
     {
         return String.format(
-                // id, forename, surname, address, age, handicap, isActive
-                "(%d, '%s', '%s', '%s', %d, %d, %d)",
-                hashCode(), firstName, lastName, "\n".join(address1,address2,address3),
+                // id, forename, surname, address lines, age, handicap, isActive
+                "(%d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d)",
+                hashCode(), firstName, lastName, address1,address2,address3,
                 age, handicap, isActive
         );
     }

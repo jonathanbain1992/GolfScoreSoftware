@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,11 +13,17 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 // Event handlers and members go here
 public class Controller {
+
+    public boolean newPlayerInserted = false;
+
+
     @FXML
     private TextField forenameField;
     @FXML
@@ -56,78 +63,41 @@ public class Controller {
     @FXML
     private ChoiceBox<LocalTime> matchTimeField;
 
-    public void initialize() {
-        DatabaseService db = null;
-        ObservableList<String> a = null;
-
-
-        try {
-            db = new DatabaseService();
-
-            a = FXCollections.observableArrayList(
-                    db.getPlayerNames()
-            );
-
-            playerOneWidget.setItems(a);
-            playerOneWidget.getSelectionModel().selectFirst();
-
-
-            playerTwoWidget.setItems(a);
-            playerTwoWidget.getSelectionModel().selectFirst();
-
-
-            // TODO populate 'add game' tab widgets with values, add to/create event handler for 'confirm match' button
-            // TODO add game scoring logic
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            System.exit(-1);
-        } finally {
-            try {
-                if (db != null && db.connection != null)
-                    db.connection.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            }
-        }
-
-
-
-
+    public void initialize()
+    {
+        updatePlayerNameChoices();
+        List<LocalTime> timeSlots = new ArrayList<>();
     }
 
 
     public void handleSavePlayerButton()
     {
-
-
         DatabaseService db = null;
 
         try {
             db = new DatabaseService();
-            db.initPlayerTable();
+            db.populate();
 
-            String[] name = {forenameField.getText(), surnameField.getText()};
+
             Integer age = Integer.parseInt(ageField.getText());
             Integer handicap = Integer.parseInt(handicapField.getText());
-            String[] address = {addressField0.getText(), addressField1.getText(), addressField2.getText()};
             String postcode = postcodeField.getText();
             Integer isActive = activeField.isSelected()? 1 : 0;
 
             Player player = new Player(
-                    name[0], name[1], address[0], address[1],
-                    address[2], postcode, age, handicap, isActive
+                    forenameField.getText(), surnameField.getText(),
+                    addressField0.getText(), addressField1.getText(),
+                    addressField2.getText(), postcode,
+                    age, handicap, isActive
             );
 
-            System.out.println("Attempting record insertion for "+name[0]+" "+name[1]);
+            System.out.println("Attempting record insertion for "+forenameField.getText()+" "+surnameField.getText());
             db.insertPlayer(player);
-
+            newPlayerInserted = true;
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            System.out.println("Something went horribly wrong");
-            System.exit(-1);
+            ex.printStackTrace();
         } finally {
             try {
                 if (db != null && db.connection != null)
@@ -140,7 +110,8 @@ public class Controller {
     }
 
 
-    public void handleSaveMatchButton(){
+    public void handleSaveMatchButton()
+    {
         DatabaseService db = null;
         try {
             db = new DatabaseService();
@@ -167,4 +138,53 @@ public class Controller {
             }
         }
     }
+
+
+    public void handleOpenCreateGameTab() {
+        // Check first that we've added a new player before operating on the database.
+        if (newPlayerInserted) {
+            updatePlayerNameChoices();
+        }
+    }
+
+
+    private void updatePlayerNameChoices()
+    {
+        DatabaseService db = null;
+        ObservableList<String> a = null;
+
+
+        try {
+            db = new DatabaseService();
+            db.populate();
+
+            a = FXCollections.observableArrayList(
+                    db.getPlayerNames()
+            );
+
+            playerOneWidget.setItems(a);
+            playerOneWidget.getSelectionModel().selectFirst();
+
+
+            playerTwoWidget.setItems(a);
+            playerTwoWidget.getSelectionModel().selectFirst();
+
+            newPlayerInserted = false;
+
+            // TODO populate 'add game' tab widgets with values, add to/create event handler for 'confirm match' button
+            // TODO add game scoring logic
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (db != null && db.connection != null)
+                    db.connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                System.exit(-1);
+            }
+        }
+    }
+
 }

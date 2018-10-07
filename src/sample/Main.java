@@ -38,15 +38,13 @@ public class Main extends Application
 
 
         this.primaryStage = primaryStage;
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 600, 300);
         this.primaryStage.setScene(scene);
         this.primaryStage.setTitle("Birdie");
+        this.primaryStage.setResizable(false);
         scene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
 
         primaryStage.setResizable(false);
-
-
-
 
         root.setId("pane");
         this.primaryStage.show();

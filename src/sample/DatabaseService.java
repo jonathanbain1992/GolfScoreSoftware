@@ -18,7 +18,7 @@ public class DatabaseService {
     }
 
 
-    private void populate() throws SQLException
+    public void populate() throws SQLException
     {
         initPlayerTable();
         initMatchesTable();
@@ -29,7 +29,17 @@ public class DatabaseService {
     public int initPlayerTable() throws SQLException
     {
         return statement.executeUpdate(
-                "create table if not exists person (id integer, firstName varchar, secondName VARCHAR , address varchar, age int, handicap int, isActive int)"
+                "create table if not exists person (" +
+                        "id integer, " +
+                        "firstName varchar, " +
+                        "secondName VARCHAR , " +
+                        "addressLine1 varchar, " +
+                        "addressLine2 varchar," +
+                        "addressLine3 varchar," +
+                        "age int, " +
+                        "handicap int, " +
+                        "isActive int" +
+                        ")"
         );
     }
 

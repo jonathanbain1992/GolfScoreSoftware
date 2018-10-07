@@ -19,6 +19,7 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0" />
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="300.0" spacing="25.0">
@@ -45,22 +46,43 @@
                               <CheckBox fx:id="activeField" mnemonicParsing="false" text="Is Active" />
                            </children>
                         </VBox>
-                        <TextField fx:id="handicapField" prefHeight="26.0" prefWidth="80.0" promptText="Handicap" />
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="125.0">
+                           <children>
+                              <TextField fx:id="handicapField" prefHeight="26.0" prefWidth="80.0" promptText="Handicap" />
+                              <Button fx:id="savePlayerButton" mnemonicParsing="false" onAction="#handleSavePlayerButton" prefHeight="26.0" prefWidth="50.0" text="Save" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
-                  <Button fx:id="savePlayerButton" layoutX="275.0" layoutY="261.0" mnemonicParsing="false" onAction="#handleSavePlayerButton" prefHeight="26.0" prefWidth="50.0" text="Save" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="275.0" AnchorPane.rightAnchor="275.0" />
                </children></AnchorPane>
       </content>
     </Tab>
-    <Tab text="Create Game">
+    <Tab id="tabButtonMatch" fx:id="tabMatch" closable="false" onSelectionChanged="#handleOpenCreateGameTab" text="Create Game">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <DatePicker fx:id="matchDateField" layoutX="60.0" layoutY="127.0" promptText="Game date" AnchorPane.leftAnchor="60.0" />
-                   <ComboBox fx:id="playerTwoWidget" layoutX="388.0" layoutY="60.0" prefWidth="150.0" promptText="Choose player" AnchorPane.rightAnchor="60.0" />
-                  <ComboBox fx:id="playerOneWidget" layoutX="60.0" layoutY="60.0" prefWidth="150.0" promptText="Choose player" AnchorPane.leftAnchor="60.0" />
-                  <Button fx:id="confirmMatchButton" layoutX="468.0" layoutY="127.0" mnemonicParsing="false" onAction="#handleSaveMatchButton" text="Confirm" AnchorPane.rightAnchor="60.0" />
-                  <ChoiceBox fx:id="matchTimeField" layoutX="300.0" layoutY="127.0" prefWidth="100.0" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="150.0">
+                           <children>
+                               <ComboBox fx:id="playerTwoWidget" prefWidth="150.0" promptText="Choose player" />
+                              <ComboBox fx:id="playerOneWidget" prefWidth="150.0" promptText="Choose player" />
+                           </children>
+                           <padding>
+                              <Insets left="50.0" right="50.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                           <children>
+                              <DatePicker fx:id="matchDateField" promptText="Game date" />
+                              <ChoiceBox fx:id="matchTimeField" prefWidth="100.0" />
+                              <Button fx:id="confirmMatchButton" mnemonicParsing="false" onAction="#handleSaveMatchButton" text="Confirm" />
+                           </children>
+                           <padding>
+                              <Insets left="50.0" right="50.0" />
+                           </padding>
+                        </HBox>
+                     </children></VBox>
                </children></AnchorPane>
       </content>
     </Tab>
