@@ -20,6 +20,9 @@ public class DatabaseService {
         try {
             connection = DriverManager.getConnection("jdbc:mysql://46.101.88.88:3306/golf?" +
                     "user=admin&password=password&useSSL=false");
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("INSERT INTO user_golf VALUES (0, 'Dave', 'S', 'a', 'b', 'c', 21, 99, 1) ");
+            
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
