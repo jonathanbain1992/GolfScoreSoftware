@@ -3,26 +3,39 @@ package sample;
 import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 // Event handlers and members go here
-public class Controller {
+public class Controller implements Initializable {
 
+    private Stage loginStage;
     public boolean newPlayerInserted = false;
+    public Integer age;
 
+
+    @FXML
+    private Label testLabel;
+
+    @FXML
+    private Button helloBtn;
 
     @FXML
     private TextField forenameField;
@@ -63,10 +76,18 @@ public class Controller {
     @FXML
     private ChoiceBox<LocalTime> matchTimeField;
 
-    public void initialize()
+
+    @FXML
+    private Button addNewPlayer;
+
+
+    @FXML
+    private ComboBox<String> playerSelect;
+
+
+    public void openLogin()
     {
-        updatePlayerNameChoices();
-        List<LocalTime> timeSlots = new ArrayList<>();
+
     }
 
 
@@ -74,12 +95,18 @@ public class Controller {
     {
         DatabaseService db = null;
 
+        System.out.println("jk");
         try {
             db = new DatabaseService();
-            db.populate();
+            //db.populate();
 
+
+
+            if (!ageInputIsInt())
+                throw new SQLException();
 
             Integer age = Integer.parseInt(ageField.getText());
+
             Integer handicap = Integer.parseInt(handicapField.getText());
             String postcode = postcodeField.getText();
             Integer isActive = activeField.isSelected()? 1 : 0;
@@ -90,10 +117,11 @@ public class Controller {
                     addressField2.getText(), postcode,
                     age, handicap, isActive
             );
+            System.out.println("after okayer but");
 
-            System.out.println("Attempting record insertion for "+forenameField.getText()+" "+surnameField.getText());
-            db.insertPlayer(player);
-            newPlayerInserted = true;
+            //System.out.println("Attempting record insertion for "+forenameField.getText()+" "+surnameField.getText());
+            //db.insertPlayer(player);
+            //newPlayerInserted = true;
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -117,14 +145,14 @@ public class Controller {
             db = new DatabaseService();
             String playerOneFullName = playerOneWidget.getValue();
             String playerTwoFullName = playerTwoWidget.getValue();
-
+/*
             if (!playerOneFullName.equals(playerTwoFullName)){
                 Integer id0 = db.getPersonIdByName(playerOneFullName);
                 Integer id1 = db.getPersonIdByName(playerTwoFullName);
                 LocalDate matchDate = matchDateField.getValue();
 
             }
-
+*/
 
 
         } catch (SQLException ex) {
@@ -153,7 +181,7 @@ public class Controller {
         DatabaseService db = null;
         ObservableList<String> a = null;
 
-
+/*
         try {
             db = new DatabaseService();
             db.populate();
@@ -185,6 +213,28 @@ public class Controller {
                 System.exit(-1);
             }
         }
+        */
     }
 
+
+    public boolean ageInputIsInt()
+    {
+        String input = ageField.getText();
+        int age;
+        try {
+            age = Integer.parseInt(input);
+            if (age < 0 || age > 150)
+                throw new NumberFormatException();
+            return true;
+        } catch (NumberFormatException e) {
+            System.out.println("Value entered was not a valid integer!");
+            return false;
+        }
+    }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
 }

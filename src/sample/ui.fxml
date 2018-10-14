@@ -15,12 +15,12 @@
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <tabs>
-    <Tab text="Add Player">
+    <Tab text="Player">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="50.0">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="300.0" spacing="25.0">
                            <children>
@@ -54,10 +54,11 @@
                         </VBox>
                      </children>
                   </HBox>
+                  <ComboBox fx:id="playerSelect" prefHeight="25.0" prefWidth="150.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="10.0" />
                </children></AnchorPane>
       </content>
     </Tab>
-    <Tab id="tabButtonMatch" fx:id="tabMatch" closable="false" onSelectionChanged="#handleOpenCreateGameTab" text="Create Game">
+    <Tab id="tabButtonMatch" fx:id="tabMatch" closable="false" onSelectionChanged="#handleOpenCreateGameTab" text="Game">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>

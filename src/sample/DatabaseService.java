@@ -1,29 +1,38 @@
 package sample;
 
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+
 public class DatabaseService {
-    public Connection connection = null;
-    private Statement statement;
+
+    Connection connection = null;
 
     public DatabaseService() throws SQLException
     {
-        // create a database connection
-        connection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
-        statement = connection.createStatement();
-        statement.setQueryTimeout(30);
-    }
+        connection = null;
 
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://46.101.88.88:3306/golf?" +
+                    "user=admin&password=password&useSSL=false");
+        } catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
+/*
 
     public void populate() throws SQLException
     {
         initPlayerTable();
         initMatchesTable();
     }
-
 
 
     public int initPlayerTable() throws SQLException
@@ -109,4 +118,5 @@ public class DatabaseService {
         );
         return personId.getInt(1);
     }
+    */
 }

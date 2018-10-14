@@ -1,6 +1,5 @@
 package sample;
 
-import com.sun.xml.internal.fastinfoset.util.DuplicateAttributeVerifier;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,33 +7,27 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.net.URL;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Main extends Application
 {
 
-    private static final String UI = "ui.fxml";
+    private static final String UI = "fxml/ui.fxml";
     private Stage primaryStage;
-    private AnchorPane anchorLayout;
-    private Controller controller;
+
+    public Stage loginStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource(UI));
-       // Scene scene = new Scene(root, 300, 250);
+        Parent root = FXMLLoader.load(getClass().getResource("ui.fxml"));
+//        Parent loginRoot = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setController(new Controller());
+
+        FXMLLoader rootLoader = new FXMLLoader();
+        rootLoader.setController(new Controller());
 
 
         this.primaryStage = primaryStage;
@@ -47,6 +40,7 @@ public class Main extends Application
         primaryStage.setResizable(false);
 
         root.setId("pane");
+
         this.primaryStage.show();
 
     }
@@ -54,7 +48,7 @@ public class Main extends Application
 
     public static void main(String[] args)
             //TODO: find out how golf works lol
-            //TODO: create method wired to gui that creates players, matches, retreives players and match list
+            //TODO: create method wired to gui that creates players, matches, retrieves players and match list
     {
 
         launch(args);

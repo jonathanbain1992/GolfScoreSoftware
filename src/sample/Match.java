@@ -1,7 +1,11 @@
 package sample;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class Match {
@@ -14,6 +18,7 @@ public class Match {
 
     private Player player1;
     private Player player2;
+
     private String location;
 
     public Player getPlayer1(){
@@ -49,9 +54,13 @@ public class Match {
 
     }
 
-    public Match(){
-
+    public Match(Player player0, Player player1, LocalDate date, LocalTime time)
+    {
+        this(player0, player1);
+        matchTime = LocalDateTime.of(date, time);
     }
+
+
 
 
 }
