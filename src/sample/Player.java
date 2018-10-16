@@ -81,9 +81,9 @@ public class Player {
     {
         return String.format(
                 // id, forename, surname, address lines, age, handicap, isActive
-                "(%d, '%s', '%s', '%s', '%s', '%s', %d, %d, %d)",
-                hashCode(), firstName, lastName, address1,address2,address3,
-                age, handicap, isActive
+                "('%s', '%s', '%s', '%s', '%s', %d, %d, %d)",
+                firstName, lastName, address1, address2, address3,
+                (int)age, (int)handicap, (int)isActive
         );
     }
 

@@ -11,90 +11,78 @@ import java.util.Arrays;
 
 public class DatabaseService {
 
-    Connection connection = null;
+    Connection connection;
+
+    // For use when there's not network firewall blocking our ports!
+    public static final String DB_URI = "jdbc:mysql://46.101.88.88:3306/golf?user=admin&password=password&useSSL=false";
+
+
+    // For use when tunnelling to the database through SSH: ssh -L 3307:localhost:3306 root@46.101.88.88
+    // in which case, 46.101.88.88:3306 is mapped to by localhost:3307.
+    // Start tunnelling first and keep the tunnel running while working.
+    public static final String DB_URI_TUNNEL = "jdbc:mysql://localhost:3307/golf?user=admin&password=d55f7bb36ff78181d7a6598ac2b5c06f0f7f2667b384710a&useSSL=false";
+
 
     public DatabaseService() throws SQLException
     {
         connection = null;
 
+
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://46.101.88.88:3306/golf?" +
-                    "user=admin&password=password&useSSL=false");
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("INSERT INTO user_golf VALUES (0, 'Dave', 'S', 'a', 'b', 'c', 21, 99, 1) ");
-            
+            connection = DriverManager.getConnection(DB_URI_TUNNEL);
+
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
     }
-/*
-
-    public void populate() throws SQLException
-    {
-        initPlayerTable();
-        initMatchesTable();
-    }
-
-
-    public int initPlayerTable() throws SQLException
-    {
-        return statement.executeUpdate(
-                "create table if not exists person (" +
-                        "id integer, " +
-                        "firstName varchar, " +
-                        "secondName VARCHAR , " +
-                        "addressLine1 varchar, " +
-                        "addressLine2 varchar," +
-                        "addressLine3 varchar," +
-                        "age int, " +
-                        "handicap int, " +
-                        "isActive int" +
-                        ")"
-        );
-    }
-
-    public int initMatchesTable() throws SQLException
-    {
-        return statement.executeUpdate(
-                "create table if not exists matches (" +
-                        "id integer primary key, " +
-                        "playerOne varchar not null, " +
-                        "playerTwo varchar not null, " +
-                        "location varchar not null, " +
-                        "matchDate date not null, " +
-                        "matchTime time not null," +
-                        "   foreign key (playerOne) references person(id)," +
-                        "   foreign key (playerTwo) references person(id))"
-        );
-    }
 
 
     public void insertPlayer(Player p) throws SQLException
     {
-        statement.executeUpdate("insert into person values" + p);  // Auto-commit enabled
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(String.format("INSERT INTO user_golf VALUES %s",
+                    p.toString()
+                ));
     }
 
-
+/*
     public void addMatch(Match m) throws SQLException
     {
     }
 
+*/
 
-    public ResultSet queryPlayers(String... attributes) throws SQLException
+    // Tries to use the connection to the database to get a result set of a player with a given forename and surname.
+    // If something goes wrong, the result is null.
+    public ResultSet queryPlayers(String forename, String surname)
     {
-        return statement.executeQuery(
-                "select "+ Arrays.toString(attributes).replaceAll("\\[|\\]", "") + " from person"
-        );
-    }
+        ResultSet result = null;
+        String query = "SELECT * FROM user_golf WHERE firstName='"+ forename +"' AND secondName='"+ surname +"';";
+        System.out.println(query);
+        try {
+            result = connection.createStatement().executeQuery(query);
 
+            // Just check if the set is empty. Move cursor back to start afterwards.
+            if (!result.next()){
+                throw new SQLException("Result set is empty for a user details query");
+            }
+            result.previous();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return result;
+    }
 
 
     public String[] getPlayerNames() throws SQLException
     {
+        Statement statement = connection.createStatement();
 
-        ResultSet names = statement.executeQuery("select firstName, secondName from person");
+        ResultSet names = statement.executeQuery("select firstName, secondName from user_golf");
         ArrayList<String> firstnames = new ArrayList<>();
         ArrayList<String> surnames = new ArrayList<>();
 
@@ -106,20 +94,10 @@ public class DatabaseService {
 
         String[] fullNames = new String[firstnames.size()];
         for (int i = 0; i < fullNames.length; i++){
-            fullNames[i] = firstnames.get(i) +" "+surnames.get(i);
+            fullNames[i] = surnames.get(i) +", "+firstnames.get(i);
         }
 
         return fullNames;
     }
-
-
-    public int getPersonIdByName(String fullName) throws SQLException
-    {
-        ResultSet personId = statement.executeQuery(
-                String.format("select id from person where firstName='%s' and secondName='%s'",
-                        fullName.split(" ")[0], fullName.split(" ")[1]) // TODO Handle double-barrel surnames (will never match as is)
-        );
-        return personId.getInt(1);
-    }
-    */
+    
 }

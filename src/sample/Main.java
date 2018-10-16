@@ -13,7 +13,7 @@ import java.net.URL;
 public class Main extends Application
 {
 
-    private static final String UI = "fxml/ui.fxml";
+    private static final String UI = "ui.fxml";
     private Stage primaryStage;
 
     public Stage loginStage;
@@ -21,14 +21,15 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource("ui.fxml"));
-//        Parent loginRoot = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        System.out.println("Enter start()");
+        Parent root = FXMLLoader.load(this.getClass().getResource("ui.fxml"));
 
-
+        System.out.println("Got resource ui.fxml");
 
         FXMLLoader rootLoader = new FXMLLoader();
         rootLoader.setController(new Controller());
 
+        System.out.println("Set controller class");
 
         this.primaryStage = primaryStage;
         Scene scene = new Scene(root, 600, 300);
@@ -39,9 +40,12 @@ public class Main extends Application
 
         primaryStage.setResizable(false);
 
+        System.out.println("Set stage");
+
         root.setId("pane");
 
         this.primaryStage.show();
+        System.out.println("Showing window of primary stage");
 
     }
 

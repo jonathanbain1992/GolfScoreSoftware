@@ -1,33 +1,21 @@
 package sample;
 
-import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import javax.xml.crypto.Data;
-import java.io.IOException;
-import java.net.URL;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.*;
 import java.time.LocalTime;
-import java.util.*;
+
+import static sample.DatabaseService.DB_URI;
 
 // Event handlers and members go here
-public class Controller implements Initializable {
+public class Controller {
 
     private Stage loginStage;
-    public boolean newPlayerInserted = false;
+    public boolean playerJustInserted = false;
     public Integer age;
 
 
@@ -76,7 +64,6 @@ public class Controller implements Initializable {
     @FXML
     private ChoiceBox<LocalTime> matchTimeField;
 
-
     @FXML
     private Button addNewPlayer;
 
@@ -84,12 +71,7 @@ public class Controller implements Initializable {
     @FXML
     private ComboBox<String> playerSelect;
 
-
-    public void openLogin()
-    {
-
-    }
-
+    private DatabaseService db = null;
 
     public void handleSavePlayerButton()
     {
@@ -98,7 +80,7 @@ public class Controller implements Initializable {
         System.out.println("jk");
         try {
             db = new DatabaseService();
-            //db.populate();
+
 
 
 
@@ -120,8 +102,9 @@ public class Controller implements Initializable {
             System.out.println("after okayer but");
 
             //System.out.println("Attempting record insertion for "+forenameField.getText()+" "+surnameField.getText());
-            //db.insertPlayer(player);
+            db.insertPlayer(player);
             //newPlayerInserted = true;
+            System.out.println("Inserted a player");
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -138,9 +121,64 @@ public class Controller implements Initializable {
     }
 
 
+    private void clearAllPlayerFields()
+    {
+        forenameField.clear();
+        surnameField.clear();
+        activeField.setSelected(false);
+        ageField.clear();
+        postcodeField.clear();
+        addressField0.clear();
+        addressField1.clear();
+        addressField2.clear();
+        handicapField.clear();
+    }
+
+
+    private void setPlayerFieldsByResults(ResultSet results) throws SQLException
+    {
+        while (results.next()) {
+            forenameField.setText(results.getString("firstName"));
+            surnameField.setText(results.getString("secondName"));
+            ageField.setText(results.getString("age"));
+            addressField0.setText(results.getString("addressLine1"));
+            addressField1.setText(results.getString("addressLine2"));
+            addressField2.setText(results.getString("addressLine3"));
+            //postcodeField.setText(results.getString("postcode")); TODO modify db schema to include this attribute
+            handicapField.setText(results.getString("handicap"));
+            activeField.setSelected(results.getBoolean("isActive"));
+        }
+    }
+
+
+    public void handlePlayerSelect()
+    {
+        String selection = playerSelect.valueProperty().get();
+        if (selection.equals("(Insert new player)")){
+            // We want to create a player from scratch so empty all of the fields.
+            clearAllPlayerFields();
+        } else {
+            // Get the first name and last name from the combobox's values: in form of [surname],[forename]
+            String last = selection.split(",")[0].trim();
+            String first = selection.split(",")[1].replace(",", "").trim();
+
+            System.out.println(String.format("first: %s; last: %s", first, last));
+
+            // TODO Come up with more elegant solution to playerDetails being null. Right now, we just ignore it. :(
+            try {
+                clearAllPlayerFields();
+                setPlayerFieldsByResults(db.queryPlayers(first, last));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                System.out.println("Something broke");
+            }
+        }
+    }
+
+
     public void handleSaveMatchButton()
     {
-        DatabaseService db = null;
+        //DatabaseService db = null;
         try {
             db = new DatabaseService();
             String playerOneFullName = playerOneWidget.getValue();
@@ -169,9 +207,9 @@ public class Controller implements Initializable {
 
 
     public void handleOpenCreateGameTab() {
-        // Check first that we've added a new player before operating on the database.
-        if (newPlayerInserted) {
+        if (playerJustInserted) {
             updatePlayerNameChoices();
+            playerJustInserted = false;
         }
     }
 
@@ -181,10 +219,8 @@ public class Controller implements Initializable {
         DatabaseService db = null;
         ObservableList<String> a = null;
 
-/*
         try {
             db = new DatabaseService();
-            db.populate();
 
             a = FXCollections.observableArrayList(
                     db.getPlayerNames()
@@ -197,7 +233,7 @@ public class Controller implements Initializable {
             playerTwoWidget.setItems(a);
             playerTwoWidget.getSelectionModel().selectFirst();
 
-            newPlayerInserted = false;
+            playerJustInserted = false;
 
             // TODO populate 'add game' tab widgets with values, add to/create event handler for 'confirm match' button
             // TODO add game scoring logic
@@ -213,7 +249,7 @@ public class Controller implements Initializable {
                 System.exit(-1);
             }
         }
-        */
+
     }
 
 
@@ -233,8 +269,25 @@ public class Controller implements Initializable {
     }
 
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize() {
+        try {
+            this.db = new DatabaseService();
+
+            ObservableList<String> playerNames = FXCollections.observableArrayList(
+                    db.getPlayerNames()
+            );
+
+            playerNames.add("(Insert new player)");
+
+            playerSelect.setItems(playerNames);
+            playerSelect.getSelectionModel().selectLast();
+
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
 
     }
 }
