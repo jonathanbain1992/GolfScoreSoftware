@@ -29,7 +29,7 @@ public class DatabaseService {
 
 
         try {
-            connection = DriverManager.getConnection(DB_URI_TUNNEL);
+            connection = DriverManager.getConnection(DB_URI);
 
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
