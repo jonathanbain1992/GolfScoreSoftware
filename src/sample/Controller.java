@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.time.LocalTime;
 
-import static sample.DatabaseService.DB_URI;
 
 // Event handlers and members go here
 public class Controller {
@@ -67,22 +66,16 @@ public class Controller {
     @FXML
     private Button addNewPlayer;
 
-
     @FXML
     private ComboBox<String> playerSelect;
 
     private DatabaseService db = null;
 
+
     public void handleSavePlayerButton()
     {
-        DatabaseService db = null;
 
-        System.out.println("jk");
         try {
-            db = new DatabaseService();
-
-
-
 
             if (!ageInputIsInt())
                 throw new SQLException();
@@ -99,24 +92,11 @@ public class Controller {
                     addressField2.getText(), postcode,
                     age, handicap, isActive
             );
-            System.out.println("after okayer but");
 
-            //System.out.println("Attempting record insertion for "+forenameField.getText()+" "+surnameField.getText());
-            db.insertPlayer(player);
-            //newPlayerInserted = true;
-            System.out.println("Inserted a player");
+            DBTransaction.insertPlayer(player);
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
             ex.printStackTrace();
-        } finally {
-            try {
-                if (db != null && db.connection != null)
-                    db.connection.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            }
         }
     }
 
@@ -135,19 +115,17 @@ public class Controller {
     }
 
 
-    private void setPlayerFieldsByResults(ResultSet results) throws SQLException
+    private void setPlayerFieldsByResults(Player p)
     {
-        while (results.next()) {
-            forenameField.setText(results.getString("firstName"));
-            surnameField.setText(results.getString("secondName"));
-            ageField.setText(results.getString("age"));
-            addressField0.setText(results.getString("addressLine1"));
-            addressField1.setText(results.getString("addressLine2"));
-            addressField2.setText(results.getString("addressLine3"));
-            //postcodeField.setText(results.getString("postcode")); TODO modify db schema to include this attribute
-            handicapField.setText(results.getString("handicap"));
-            activeField.setSelected(results.getBoolean("isActive"));
-        }
+        forenameField.setText(p.getFirstName());
+        surnameField.setText(p.getLastName());
+        ageField.setText(String.valueOf(p.getAge()));
+        activeField.setSelected(p.getIsActive() == 1);
+        addressField0.setText(p.getAddress().get(0));
+        addressField1.setText(p.getAddress().get(1));
+        addressField2.setText(p.getAddress().get(2));
+        //postcodeField.setText(results.getString("postcode")); TODO modify db schema to include this attribute
+        handicapField.setText(String.valueOf(p.getHandicap()));;
     }
 
 
@@ -167,30 +145,32 @@ public class Controller {
             // TODO Come up with more elegant solution to playerDetails being null. Right now, we just ignore it. :(
             try {
                 clearAllPlayerFields();
-                setPlayerFieldsByResults(db.queryPlayers(first, last));
-            } catch (SQLException ex) {
+                setPlayerFieldsByResults(DBTransaction.getPlayerFromQuery(first,last));
+            } catch (Exception ex) {
                 ex.printStackTrace();
-                System.out.println("Something broke");
+                System.out.println("Setting player fields failed!");
             }
         }
     }
 
 
+
+    // TODO: implement handleSaveMatchButton event handler.
+
     public void handleSaveMatchButton()
     {
-        //DatabaseService db = null;
-        try {
-            db = new DatabaseService();
+/*        try {
+           db = new DatabaseService();
             String playerOneFullName = playerOneWidget.getValue();
             String playerTwoFullName = playerTwoWidget.getValue();
-/*
+
             if (!playerOneFullName.equals(playerTwoFullName)){
                 Integer id0 = db.getPersonIdByName(playerOneFullName);
                 Integer id1 = db.getPersonIdByName(playerTwoFullName);
                 LocalDate matchDate = matchDateField.getValue();
 
             }
-*/
+/
 
 
         } catch (SQLException ex) {
@@ -201,9 +181,13 @@ public class Controller {
                     db.connection.close();
             } catch (SQLException ex){
                 System.out.println(ex.getMessage());
-            }
-        }
-    }
+*/            }
+
+
+
+
+
+
 
 
     public void handleOpenCreateGameTab() {
@@ -216,14 +200,12 @@ public class Controller {
 
     private void updatePlayerNameChoices()
     {
-        DatabaseService db = null;
-        ObservableList<String> a = null;
+
 
         try {
-            db = new DatabaseService();
 
-            a = FXCollections.observableArrayList(
-                    db.getPlayerNames()
+            ObservableList<String> a = FXCollections.observableArrayList(
+                    new DBTransaction().getPlayerNames()
             );
 
             playerOneWidget.setItems(a);
@@ -238,16 +220,8 @@ public class Controller {
             // TODO populate 'add game' tab widgets with values, add to/create event handler for 'confirm match' button
             // TODO add game scoring logic
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        } finally {
-            try {
-                if (db != null && db.connection != null)
-                    db.connection.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            }
         }
 
     }
@@ -269,12 +243,12 @@ public class Controller {
     }
 
 
-    public void initialize() {
+    public void initialize()
+    {
         try {
-            this.db = new DatabaseService();
 
             ObservableList<String> playerNames = FXCollections.observableArrayList(
-                    db.getPlayerNames()
+                    new DBTransaction().getPlayerNames()
             );
 
             playerNames.add("(Insert new player)");
@@ -284,8 +258,8 @@ public class Controller {
 
 
 
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
 
