@@ -74,9 +74,7 @@ public class Controller {
 
     public void handleSavePlayerButton()
     {
-
         try {
-
             if (!ageInputIsInt())
                 throw new SQLException();
 
@@ -84,7 +82,7 @@ public class Controller {
 
             Integer handicap = Integer.parseInt(handicapField.getText());
             String postcode = postcodeField.getText();
-            Integer isActive = activeField.isSelected()? 1 : 0;
+            Integer isActive = activeField.isSelected() ? 1 : 0;
 
             Player player = new Player(
                     forenameField.getText(), surnameField.getText(),
@@ -93,8 +91,24 @@ public class Controller {
                     age, handicap, isActive
             );
 
-            DBTransaction.insertPlayer(player);
+            String currentPlayerSelection = playerSelect.valueProperty().get();
 
+            if (currentPlayerSelection.equals("(Insert new player)")) {
+                DBTransaction.insertPlayer(player);
+            } else {
+
+                // Get the first name and last name from the combobox's values: in form of [surname],[forename]
+                String last = currentPlayerSelection.split(",")[0].trim();
+                String first = currentPlayerSelection.split(",")[1].replace(",", "").trim();
+
+                DBTransaction.updatePlayer(first, last, player);
+            }
+
+
+            System.out.println("Trying to insert player "+player.toString());
+
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

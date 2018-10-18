@@ -56,6 +56,19 @@ public class DBTransaction
     }
 
 
+    public static void updatePlayer(String firstName, String lastName, Player p)
+    {
+        try (DatabaseService service = new DatabaseService()) {
+            String query = "UPDATE user_golf " +
+                    "SET "+ p.attributes() +
+                    "   WHERE firstName='"+ firstName + "' AND secondName='" + lastName + "';";
+            service.getConnection().createStatement().executeUpdate(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     public static void addMatch(Match m) throws SQLException
     {
     }

@@ -87,4 +87,14 @@ public class Player {
         );
     }
 
+
+    public String attributes()
+    {
+        return String.format(
+                "firstName='%s', secondName='%s', age=%d, addressLine1='%s', addressLine2='%s', addressLine3='%s'" +
+                        "isActive=%d, handicap='%s'",
+                firstName, lastName, age, address1, address2, address3, isActive, handicap
+        );
+    }
+
 }
