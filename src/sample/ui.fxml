@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <tabs>
     <Tab text="Player">
       <content>
@@ -66,8 +66,8 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="150.0">
                            <children>
-                               <ComboBox fx:id="playerTwoWidget" prefWidth="150.0" promptText="Choose player" />
-                              <ComboBox fx:id="playerOneWidget" prefWidth="150.0" promptText="Choose player" />
+                               <ComboBox fx:id="playerOneWidget" prefWidth="150.0" promptText="Choose player" />
+                              <ComboBox fx:id="playerTwoWidget" prefWidth="150.0" promptText="Choose player" />
                            </children>
                            <padding>
                               <Insets left="50.0" right="50.0" />

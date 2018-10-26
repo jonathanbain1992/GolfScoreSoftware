@@ -219,7 +219,7 @@ public class Controller {
         try {
 
             ObservableList<String> a = FXCollections.observableArrayList(
-                    new DBTransaction().getPlayerNames()
+                    DBTransaction.getPlayerNames()
             );
 
             playerOneWidget.setItems(a);
@@ -262,7 +262,7 @@ public class Controller {
         try {
 
             ObservableList<String> playerNames = FXCollections.observableArrayList(
-                    new DBTransaction().getPlayerNames()
+                    DBTransaction.getPlayerNames()
             );
 
             playerNames.add("(Insert new player)");
