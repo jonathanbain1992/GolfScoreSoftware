@@ -5,22 +5,26 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.sqlite.core.DB;
-
-import java.sql.*;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 
+// TODO Add database CRUD for postcode attribute (column now present in database)
+// TODO Add input checking for user input forms
 // Event handlers and members go here
 public class Controller {
 
-    private Stage loginStage;
     public boolean playerJustInserted = false;
-    public Integer age;
+    public static final String NEW_PLAYER = "(Insert new player)";
+
+    private DatabaseService db = null;
+
+    // Contains() of Set will only return true if the Player argument's hashCode equals() one of the hashCodes in the
+    // set: which will depend on all of the values of the player record being the same.
+    private HashSet<Integer> previousPlayerSubmissions = new HashSet<>();
+
+
+    private HashSet<Player> playerCache = new HashSet<>();
 
 
     @FXML
@@ -74,12 +78,6 @@ public class Controller {
     @FXML
     private ComboBox<String> playerSelect;
 
-    private DatabaseService db = null;
-
-
-    // Contains() of Set will only return true if the Player argument's hashCode equals() one of the hashCodes in the
-    // set: which will depend on all of the values of the player record being the same.
-    private HashSet<Integer> previousPlayerSubmissions;
 
     public void handleSavePlayerButton()
     {
@@ -98,13 +96,14 @@ public class Controller {
 
                 String currentPlayerSelection = playerSelect.valueProperty().get();
 
-                if (currentPlayerSelection.equals("(Insert new player)")) {
+                if (currentPlayerSelection.equals(NEW_PLAYER)) {
                     DBTransaction.insertPlayer(player);
                 } else {
 
                     // Get the first name and last name from the combobox's values: in form of [surname],[forename]
                     String last = currentPlayerSelection.split(",")[0].trim();
                     String first = currentPlayerSelection.split(",")[1].replace(",", "").trim();
+                    // Don't accept user input until the request has been dealt with. TODO: handle errors with database execution
                     savePlayerButton.setDisable(true);
                     DBTransaction.updatePlayer(first, last, player);
                     savePlayerButton.setDisable(false);
@@ -160,8 +159,8 @@ public class Controller {
     {
         String selection = playerSelect.valueProperty().get();
         if (selection == null)
-            selection = "(Insert new player)";
-        if (selection.equals("(Insert new player)")){
+            selection = NEW_PLAYER;
+        if (selection.equals(NEW_PLAYER)){
             // We want to create a player from scratch so empty all of the fields.
             clearAllPlayerFields();
         } else {
@@ -169,7 +168,7 @@ public class Controller {
             String last = selection.split(",")[0].trim();
             String first = selection.split(",")[1].replace(",", "").trim();
 
-            System.out.println(String.format("first: %s; last: %s", first, last));
+            System.out.println(String.format("Selected player %s %s.", first, last));
 
             // TODO Come up with more elegant solution to playerDetails being null. Right now, we just ignore it. :(
             try {
@@ -187,7 +186,7 @@ public class Controller {
                 );
             } catch (Exception ex) {
                 ex.printStackTrace();
-                System.out.println("Setting player fields failed!");
+                System.out.println("Setting player fields failed.");
             }
         }
     }
@@ -238,7 +237,7 @@ public class Controller {
                 DBTransaction.getPlayerNames()
         );
 
-        playerNames.add("(Insert new player)");
+        playerNames.add(NEW_PLAYER);
 
         playerSelect.setItems(playerNames);
         playerSelect.getSelectionModel().selectLast();
@@ -281,11 +280,11 @@ public class Controller {
         int age;
         try {
             age = Integer.parseInt(input);
-            if (age < 0 || age > 150)
-                throw new NumberFormatException();
+            if (age < 0 || age > 125)
+                throw new NumberFormatException("Age outside of normal human life expectancy.");
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Value entered was not a valid integer!");
+            System.out.println("Value entered was not a valid integer.");
             return false;
         }
     }
@@ -294,7 +293,6 @@ public class Controller {
     public void initialize()
     {
         try {
-            previousPlayerSubmissions = new HashSet<Integer>();
             updatePlayerNameSelection();
         } catch (Exception ex) {
             ex.printStackTrace();
