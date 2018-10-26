@@ -4,8 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.HashSet;
 
 
@@ -24,7 +25,8 @@ public class Controller {
     private HashSet<Integer> previousPlayerSubmissions = new HashSet<>();
 
 
-    private HashSet<Player> playerCache = new HashSet<>();
+    // Cache of previously loaded players: "secondName, firstName" -> Player object
+    private HashMap<String, Player> playerCache = new HashMap<>();
 
 
     @FXML
@@ -141,7 +143,7 @@ public class Controller {
     }
 
 
-    private void setPlayerFieldsByResults(Player p)
+    private void setPlayerFields(Player p)
     {
         forenameField.setText(p.getFirstName());
         surnameField.setText(p.getLastName());
@@ -160,9 +162,13 @@ public class Controller {
         String selection = playerSelect.valueProperty().get();
         if (selection == null)
             selection = NEW_PLAYER;
-        if (selection.equals(NEW_PLAYER)){
-            // We want to create a player from scratch so empty all of the fields.
-            clearAllPlayerFields();
+
+        if (selection.equals(NEW_PLAYER)) {
+            clearAllPlayerFields();  // We want to create a player from scratch so empty all of the fields.
+
+        } else if (playerCache.containsKey(selection)) {
+            setPlayerFields(playerCache.get(selection));
+
         } else {
             // Get the first name and last name from the combobox's values: in form of [surname],[forename]
             String last = selection.split(",")[0].trim();
@@ -173,17 +179,19 @@ public class Controller {
             // TODO Come up with more elegant solution to playerDetails being null. Right now, we just ignore it. :(
             try {
                 clearAllPlayerFields();
-                setPlayerFieldsByResults(DBTransaction.getPlayerFromQuery(first,last));
-
+                setPlayerFields(DBTransaction.getPlayerFromQuery(first,last));
+                Player p;
                 // As we've selected this player, we're likely interested in updating their record: store the initial
                 // field data in the previousPlayerSubmissions ledger for future reference.
                 previousPlayerSubmissions.add(
-                        new Player(
+                        (p = new Player(
                                 forenameField.getText(), surnameField.getText(), addressField0.getText(),
                                 addressField1.getText(), addressField2.getText(), ageField.getText(),
                                 handicapField.getText(), activeField.isSelected()? "1":"0"
-                        ).hashCode()
+                        )).hashCode()
                 );
+                // Add the player to the cache so that loading them next time doesn't require polling the database.
+                playerCache.put(p.getLastName() + ", " + p.getFirstName(), p);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("Setting player fields failed.");

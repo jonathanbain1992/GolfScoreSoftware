@@ -16,7 +16,9 @@ public class DBTransaction
         try (DatabaseService service = new DatabaseService()) {
             return service.getConnection()
                     .createStatement()
-                    .executeUpdate(String.format("INSERT INTO user_golf VALUES %s", p.toString()));
+                    .executeUpdate(
+                            String.format(
+                                    "INSERT INTO user_golf VALUES %s;", p.toString()));
 
         } catch (SQLException ex) {
             ex.printStackTrace();
