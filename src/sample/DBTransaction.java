@@ -11,16 +11,17 @@ import java.util.HashMap;
  */
 public class DBTransaction
 {
-    public static void insertPlayer(Player p)
+    public static int insertPlayer(Player p)
     {
         try (DatabaseService service = new DatabaseService()) {
-            service.getConnection()
+            return service.getConnection()
                     .createStatement()
                     .executeUpdate(String.format("INSERT INTO user_golf VALUES %s", p.toString()));
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        return -1; // Method returns row count or nothing so return -1 in this program if it couldn't update.
     }
 
 
@@ -56,16 +57,17 @@ public class DBTransaction
     }
 
 
-    public static void updatePlayer(String firstName, String lastName, Player p)
+    public static int updatePlayer(String firstName, String lastName, Player p)
     {
         try (DatabaseService service = new DatabaseService()) {
             String query = "UPDATE user_golf " +
                     "SET "+ p.attributes() +
-                    "   WHERE firstName='"+ firstName + "' AND secondName='" + lastName + "';";
-            service.getConnection().createStatement().executeUpdate(query);
+                    " WHERE firstName='"+ firstName + "' AND secondName='" + lastName + "';";
+            return service.getConnection().createStatement().executeUpdate(query);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        return -1; // Method returns row count or nothing so return -1 in this program if it couldn't update.
     }
 
 

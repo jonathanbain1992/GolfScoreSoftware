@@ -88,11 +88,57 @@ public class Player {
     }
 
 
+    public String[] asStringArray()
+    {
+        return new String[]{
+                firstName, lastName, address1, address2, address3, String.valueOf(age), String.valueOf(handicap),
+                String.valueOf(isActive)
+        };
+    }
+
+    /**
+     * Get a player object from a string array of its expected values in the expected order.
+     * @param values String[] of {firstName, lastName, address1, address2, address3, age, handicap, isActive}
+     * @return A Player object with the given attributes
+     */
+    public Player(String... values)
+    {
+        firstName = values[0];
+        lastName = values[1];
+        address1 = values[2];
+        address2 = values[3];
+        address3 = values[4];
+        age = Integer.parseInt(values[5]);
+        handicap= Integer.parseInt(values[6]);
+        isActive = Integer.parseInt(values[7]);
+    }
+
+
+    @Override
+    public int hashCode()
+    {
+        int result = 17;
+        for (String attr: this.asStringArray())
+            result *= 31 + attr.hashCode();     // Cut down on code required: ints in String form still have different hashCodes
+        return result;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof Player))
+            return false;
+        return Arrays.equals(((Player) o).asStringArray(), this.asStringArray());
+    }
+
+
     public String attributes()
     {
         return String.format(
-                "firstName='%s', secondName='%s', age=%d, addressLine1='%s', addressLine2='%s', addressLine3='%s'" +
-                        "isActive=%d, handicap='%s'",
+                "firstName = '%s', secondName = '%s', age = %d, addressLine1 = '%s', addressLine2 = '%s', addressLine3 = '%s'," +
+                        "isActive = %d, handicap = '%s'",
                 firstName, lastName, age, address1, address2, address3, isActive, handicap
         );
     }

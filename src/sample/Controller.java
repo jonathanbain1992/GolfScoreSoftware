@@ -5,9 +5,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.sqlite.core.DB;
 
 import java.sql.*;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 
 // Event handlers and members go here
@@ -72,45 +77,53 @@ public class Controller {
     private DatabaseService db = null;
 
 
+    // Contains() of Set will only return true if the Player argument's hashCode equals() one of the hashCodes in the
+    // set: which will depend on all of the values of the player record being the same.
+    private HashSet<Integer> previousPlayerSubmissions;
+
     public void handleSavePlayerButton()
     {
-        try {
-            if (!ageInputIsInt())
-                throw new SQLException();
+        Player player = new Player(
+                forenameField.getText(), surnameField.getText(),
+                addressField0.getText(), addressField1.getText(),
+                addressField2.getText(), postcodeField.getText(),
+                Integer.parseInt(ageField.getText()), Integer.parseInt(handicapField.getText()),
+                activeField.isSelected()? 1 : 0
+        );
 
-            Integer age = Integer.parseInt(ageField.getText());
+        // Only go ahead and try to update if the entry form for the player does not equal any in the list
+        // (i.e., there has been a change to a player)
+        if (!previousPlayerSubmissions.contains(player.hashCode())) {
+            try {
 
-            Integer handicap = Integer.parseInt(handicapField.getText());
-            String postcode = postcodeField.getText();
-            Integer isActive = activeField.isSelected() ? 1 : 0;
+                String currentPlayerSelection = playerSelect.valueProperty().get();
 
-            Player player = new Player(
-                    forenameField.getText(), surnameField.getText(),
-                    addressField0.getText(), addressField1.getText(),
-                    addressField2.getText(), postcode,
-                    age, handicap, isActive
-            );
+                if (currentPlayerSelection.equals("(Insert new player)")) {
+                    DBTransaction.insertPlayer(player);
+                } else {
 
-            String currentPlayerSelection = playerSelect.valueProperty().get();
+                    // Get the first name and last name from the combobox's values: in form of [surname],[forename]
+                    String last = currentPlayerSelection.split(",")[0].trim();
+                    String first = currentPlayerSelection.split(",")[1].replace(",", "").trim();
+                    savePlayerButton.setDisable(true);
+                    DBTransaction.updatePlayer(first, last, player);
+                    savePlayerButton.setDisable(false);
+                }
 
-            if (currentPlayerSelection.equals("(Insert new player)")) {
-                DBTransaction.insertPlayer(player);
-            } else {
 
-                // Get the first name and last name from the combobox's values: in form of [surname],[forename]
-                String last = currentPlayerSelection.split(",")[0].trim();
-                String first = currentPlayerSelection.split(",")[1].replace(",", "").trim();
+                System.out.println("Trying to insert player "+player.toString());
 
-                DBTransaction.updatePlayer(first, last, player);
+                // Show the changed list of players to choose from in the UI's dropdown.
+                updatePlayerNameSelection();
+                playerSelect.valueProperty().setValue(player.getLastName()+", "+player.getFirstName());
+
+                // Add submitted data to ledger.
+                /* TODO | WARNING! AS THE INSTANCE OF THE SOFTWARE GOES THROUGH AN INCREASING NUMBER OF UPDATES THE
+                   HASHSET OF PLAYERS WILL INCREASE IN SIZE */
+                previousPlayerSubmissions.add(player.hashCode());
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
             }
-
-
-            System.out.println("Trying to insert player "+player.toString());
-
-        } catch (NumberFormatException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -139,13 +152,15 @@ public class Controller {
         addressField1.setText(p.getAddress().get(1));
         addressField2.setText(p.getAddress().get(2));
         //postcodeField.setText(results.getString("postcode")); TODO modify db schema to include this attribute
-        handicapField.setText(String.valueOf(p.getHandicap()));;
+        handicapField.setText(String.valueOf(p.getHandicap()));
     }
 
 
     public void handlePlayerSelect()
     {
         String selection = playerSelect.valueProperty().get();
+        if (selection == null)
+            selection = "(Insert new player)";
         if (selection.equals("(Insert new player)")){
             // We want to create a player from scratch so empty all of the fields.
             clearAllPlayerFields();
@@ -160,6 +175,16 @@ public class Controller {
             try {
                 clearAllPlayerFields();
                 setPlayerFieldsByResults(DBTransaction.getPlayerFromQuery(first,last));
+
+                // As we've selected this player, we're likely interested in updating their record: store the initial
+                // field data in the previousPlayerSubmissions ledger for future reference.
+                previousPlayerSubmissions.add(
+                        new Player(
+                                forenameField.getText(), surnameField.getText(), addressField0.getText(),
+                                addressField1.getText(), addressField2.getText(), ageField.getText(),
+                                handicapField.getText(), activeField.isSelected()? "1":"0"
+                        ).hashCode()
+                );
             } catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("Setting player fields failed!");
@@ -198,21 +223,30 @@ public class Controller {
 */            }
 
 
-
-
-
-
-
-
     public void handleOpenCreateGameTab() {
         if (playerJustInserted) {
-            updatePlayerNameChoices();
+            updateMatchPlayerChoices();
             playerJustInserted = false;
         }
     }
 
 
-    private void updatePlayerNameChoices()
+    private void updatePlayerNameSelection()
+    {
+        System.out.println("Updating player names from database");
+        ObservableList<String> playerNames = FXCollections.observableArrayList(
+                DBTransaction.getPlayerNames()
+        );
+
+        playerNames.add("(Insert new player)");
+
+        playerSelect.setItems(playerNames);
+        playerSelect.getSelectionModel().selectLast();
+        System.out.println("Player names updated");
+
+    }
+
+    private void updateMatchPlayerChoices()
     {
 
 
@@ -260,18 +294,8 @@ public class Controller {
     public void initialize()
     {
         try {
-
-            ObservableList<String> playerNames = FXCollections.observableArrayList(
-                    DBTransaction.getPlayerNames()
-            );
-
-            playerNames.add("(Insert new player)");
-
-            playerSelect.setItems(playerNames);
-            playerSelect.getSelectionModel().selectLast();
-
-
-
+            previousPlayerSubmissions = new HashSet<Integer>();
+            updatePlayerNameSelection();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
