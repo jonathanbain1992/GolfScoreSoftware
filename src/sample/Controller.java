@@ -90,6 +90,7 @@ public class Controller {
                 Integer.parseInt(ageField.getText()), Integer.parseInt(handicapField.getText()),
                 activeField.isSelected()? 1 : 0
         );
+        player.setPostCode(postcodeField.getText());
 
         // Only go ahead and try to update if the entry form for the player does not equal any in the list
         // (i.e., there has been a change to a player)
@@ -152,7 +153,7 @@ public class Controller {
         addressField0.setText(p.getAddress().get(0));
         addressField1.setText(p.getAddress().get(1));
         addressField2.setText(p.getAddress().get(2));
-        //postcodeField.setText(results.getString("postcode")); TODO modify db schema to include this attribute
+        postcodeField.setText(p.getAddress().get(3));
         handicapField.setText(String.valueOf(p.getHandicap()));
     }
 
@@ -187,7 +188,7 @@ public class Controller {
                         (p = new Player(
                                 forenameField.getText(), surnameField.getText(), addressField0.getText(),
                                 addressField1.getText(), addressField2.getText(), ageField.getText(),
-                                handicapField.getText(), activeField.isSelected()? "1":"0"
+                                handicapField.getText(), activeField.isSelected()? "1":"0", postcodeField.getText()
                         )).hashCode()
                 );
                 // Add the player to the cache so that loading them next time doesn't require polling the database.

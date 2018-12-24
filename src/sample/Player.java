@@ -76,6 +76,14 @@ public class Player {
         this.handicap = handicap;
     }
 
+
+
+    public void setPostCode(String postCode)
+    {
+        this.postCode = postCode;
+    }
+
+
     @Override
     public String toString()
     {
@@ -83,7 +91,7 @@ public class Player {
                 // id, forename, surname, address lines, age, handicap, isActive
                 "('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s')",
                 firstName, lastName, address1, address2, address3,
-                (int)age, (int)handicap, (int)isActive, ""
+                (int)age, (int)handicap, (int)isActive, postCode
         );
     }
 
@@ -92,7 +100,7 @@ public class Player {
     {
         return new String[]{
                 firstName, lastName, address1, address2, address3, String.valueOf(age), String.valueOf(handicap),
-                String.valueOf(isActive), ""
+                String.valueOf(isActive), postCode
         };
     }
 
@@ -111,6 +119,7 @@ public class Player {
         age = Integer.parseInt(values[5]);
         handicap= Integer.parseInt(values[6]);
         isActive = Integer.parseInt(values[7]);
+        postCode = values[8];
     }
 
 
@@ -138,8 +147,8 @@ public class Player {
     {
         return String.format(
                 "firstName = '%s', secondName = '%s', age = %d, addressLine1 = '%s', addressLine2 = '%s', addressLine3 = '%s'," +
-                        "isActive = %d, handicap = '%s', postcode=''",
-                firstName, lastName, age, address1, address2, address3, isActive, handicap
+                        "isActive = %d, handicap = '%s', postcode='%s'",
+                firstName, lastName, age, address1, address2, address3, isActive, handicap, postCode
         );
     }
 
